@@ -52,6 +52,10 @@ src/
 - Next.js (App Router + TypeScript) – Hybrid rendering, dynamic routing, layouts
 - Redux Toolkit – Clean, scalable global state for cart logic
 - Tailwind CSS – Utility-first CSS framework for responsive styling
+  <<<<<<< HEAD
+  =======
+- MUI (v6.1.7) – Accessible, elegant UI components
+  > > > > > > > 5e9e82b49c7ca4a8ba2f3360114b6b3c3b0079f7
 - React Icons / Lucide Icons – Iconography for actions and navigation
 - sessionStorage – Client-side persistence without backend calls
 - React Hook Form (optional) – For future-ready forms
