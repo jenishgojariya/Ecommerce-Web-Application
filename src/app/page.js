@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState } from "react";
-// import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { authenticate } from "./lib/action";
 
 export default function Home() {
