@@ -1,10 +1,15 @@
 import Image from "next/image";
 import React from "react";
 import InfoCard from "./InfoCard";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { Minus, Plus } from "lucide-react";
+import { updateCartData } from "@/lib/features/cartSlice";
+import { useDispatch } from "react-redux";
 
 const Card = (props) => {
+  const router = useRouter();
   const path = usePathname();
+  const dispatch = useDispatch();
   const isDash = path === "/dashboard";
   const { handleCartClick, ...rest } = props;
   const { id, brand, images, title, price } = rest;
@@ -18,12 +23,13 @@ const Card = (props) => {
       <div>
         {images && (
           <Image
+            onClick={() => router.push(`/product/${id}`)}
             src={images[0]}
             alt={`${title} Image`}
             width={100}
             height={100}
             loading="lazy"
-            className="w-full h-[225px]"
+            className="w-full h-[225px] cursor-pointer"
           />
         )}
         <div className="flex flex-col gap-1 w-full">
@@ -31,7 +37,21 @@ const Card = (props) => {
           {brand && <InfoCard title={"Brand"} value={brand} />}
           {price && <InfoCard title={"Price"} value={`$${price}`} />}
           {!isDash && props?.count && (
-            <InfoCard title={"Qty"} value={props?.count} />
+            <div className="flex gap-1">
+              <InfoCard title={"Qty"} value={props?.count} />
+              <button
+                className="cursor-pointer"
+                onClick={() => dispatch(updateCartData({ id, act: "inc" }))}
+              >
+                <Plus />
+              </button>
+              <button
+                className="cursor-pointer"
+                onClick={() => dispatch(updateCartData({ id, act: "dec" }))}
+              >
+                <Minus />
+              </button>
+            </div>
           )}
         </div>
       </div>

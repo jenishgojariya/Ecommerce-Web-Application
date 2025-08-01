@@ -1,3 +1,5 @@
+'use client'; // 🔥 MUST in App Router if using sessionStorage/localStorage
+
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,19 +16,24 @@ const DashboardComp = () => {
   const { cartData } = useSelector((state) => state.cart);
 
   const fetchData = async () => {
-    const cachedData = JSON.parse(sessionStorage.getItem("products")) || [];
-    if (cachedData.length > 0) {
-      setOriginalData(cachedData);
-      setProductData(cachedData);
-      return;
-    }
-    const res = await fetch("https://dummyjson.com/products");
-    const data = await res.json();
-    const setData = data.products;
-    if (setData.length > 0) {
-      sessionStorage.setItem("products", JSON.stringify(setData));
-      setProductData(setData);
-      setOriginalData(setData);
+    if (typeof window !== "undefined") {
+      const cachedData = JSON.parse(sessionStorage.getItem("products")) || [];
+
+      if (cachedData.length > 0) {
+        setOriginalData(cachedData);
+        setProductData(cachedData);
+        return;
+      }
+
+      const res = await fetch("https://dummyjson.com/products");
+      const data = await res.json();
+      const setData = data.products;
+
+      if (setData.length > 0) {
+        sessionStorage.setItem("products", JSON.stringify(setData));
+        setProductData(setData);
+        setOriginalData(setData);
+      }
     }
   };
 
@@ -44,12 +51,16 @@ const DashboardComp = () => {
   };
 
   const handleCartClick = (data) => {
-    const index = cartData.findIndex((item) => item.id === data.id);
-    if (index >= 0) {
-      dispatch(updateCartData(index));
-      return;
+    if (typeof window !== "undefined") {
+      const cartData = JSON.parse(sessionStorage.getItem("cartData")) || [];
+      if (cartData.length > 0) {
+        const index = cartData?.findIndex((item) => item.id === data.id) || -1;
+        if (index >= 0) {
+          dispatch(updateCartData({ id: data.id, act: "inc" }));
+          return;
+        }
+      }
     }
-
     dispatch(addToCart({ ...data, count: 1 }));
   };
 
@@ -60,17 +71,16 @@ const DashboardComp = () => {
 
   useEffect(() => {
     handleFilterChange(filterOption);
-    return () => {};
   }, [filterOption]);
 
   useEffect(() => {
     fetchData();
-    return () => {};
   }, []);
 
   useEffect(() => {
-    sessionStorage.setItem("cartData", JSON.stringify(cartData));
-    return () => {};
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("cartData", JSON.stringify(cartData));
+    }
   }, [cartData]);
 
   return productData ? (
@@ -79,7 +89,7 @@ const DashboardComp = () => {
         <Filter filterOption={filterOption} setFilterOption={setFilterOption} />
         {reset && <X className="text-red-500" onClick={handleResetClick} />}
       </div>
-      <div className=" grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 ">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
         {productData?.map((data) => (
           <Card key={data.id} {...data} handleCartClick={handleCartClick} />
         ))}
