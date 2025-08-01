@@ -1,4 +1,4 @@
-'use client'; // 🔥 MUST in App Router if using sessionStorage/localStorage
+"use client"; // 🔥 MUST in App Router if using sessionStorage/localStorage
 
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
@@ -52,9 +52,13 @@ const DashboardComp = () => {
 
   const handleCartClick = (data) => {
     if (typeof window !== "undefined") {
-      const cartData = JSON.parse(sessionStorage.getItem("cartData")) || [];
+      // const cartData = JSON.parse(sessionStorage.getItem("cartData")) || [];
+      console.log("cartData --- ", cartData);
+      console.log("id --- ", data.id);
+
       if (cartData.length > 0) {
-        const index = cartData?.findIndex((item) => item.id === data.id) || -1;
+        const index = cartData.findIndex((item) => item.id === data.id);
+
         if (index >= 0) {
           dispatch(updateCartData({ id: data.id, act: "inc" }));
           return;
