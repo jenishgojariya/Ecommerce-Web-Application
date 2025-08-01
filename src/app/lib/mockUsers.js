@@ -2,8 +2,8 @@
 export const users = [
   {
     id: "1",
-    name: "Jenish Gojariya",
-    email: "jenishgojariya@gmail.com",
-    password: "123", // In real apps, use hashed passwords
+    name: "Swami Vivekananda",
+    email: "swamiji@gmail.com",
+    password: "123456", // In real apps, use hashed passwords
   },
 ];
